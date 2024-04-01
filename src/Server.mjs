@@ -31,7 +31,7 @@ let ball = {
   y: 250, // Assuming game height is 500
   dx: randomVelocity(3, 5), // Random horizontal velocity between 3 and 5
   dy: randomVelocity(3, 5), // Random vertical velocity between 3 and 5
-  radius: 10, // Ball radius
+  radius: 10
 };
 
 const updateBallPosition = () => {
@@ -39,29 +39,40 @@ const updateBallPosition = () => {
   ball.y += ball.dy;
 
   // Collision with top and bottom walls
-  if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= 500) {
-    ball.dy = -ball.dy;
+  if (ball.y - ball.radius <= 0){
+    ball.dy = Math.abs(ball.dy);
+  }
+
+  if (ball.y + ball.radius >= 500) {
+    ball.dy = -Math.abs(ball.dy);
+  }
+
+  //Collision with left/right walls.
+  if (ball.x - ball.radius <= 0){
+    ball.dx = Math.abs(ball.dx);
+  }
+
+  if (ball.x + ball.radius >= 1000) {
+    ball.dx = -Math.abs(ball.dx);
   }
 
   // Collision detection with left paddle
   if (ball.x - ball.radius <= 20 + 20 && // Left paddle width + ball radius
       ball.y >= paddles.left.y &&
       ball.y <= paddles.left.y + 100) { // Assuming paddle height is 100
-    ball.dx = -ball.dx;
+    ball.dx = Math.abs(ball.dx) * 1.2; // Force ball to the right
   }
 
   // Collision detection with right paddle
-  if (ball.x + ball.radius >= 1000 - 20 - 20 && // Right paddle position from the right wall + ball radius
+  if (ball.x + ball.radius >= 1000 - 20 - 20 && // Game width - right paddle position from the right wall - ball radius
       ball.y >= paddles.right.y &&
       ball.y <= paddles.right.y + 100) {
-    ball.dx = -ball.dx;
+    ball.dx = -Math.abs(ball.dx) * 1.2; // Force ball to the left
   }
-
   io.emit('ballUpdate', ball);
 };
 
 setInterval(updateBallPosition, 1000 / 60); // Update ball position at 60 FPS
-
 
 
 
