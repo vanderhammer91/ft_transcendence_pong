@@ -1,0 +1,199 @@
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #000; /* Optional: background color for the area outside the game */
+}
+
+/* Updated App styles */
+.App {
+  width: 1000px;
+  height: 500px;
+  position: relative;
+  background-color: #333;
+  color: white;
+}
+
+
+/* .App {
+  width: 1000px;  
+  height: 500px; 
+  margin: 0 auto; 
+  position: relative; 
+  background-color: #333; 
+  color: white; 
+} */
+
+
+@font-face {
+  font-family: 'sevenseg';
+  src: url('../public/fonts/sevenseg.ttf') format('truetype');
+} 
+
+.mid-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150px; /* Diameter of the circle */
+  height: 150px; /* Diameter of the circle */
+  background-color: transparent; /* Circle is only defined by its border */
+  border: 2px solid white; /* White border, 2px thick */
+  border-radius: 50%; /* Rounds the corners into a circle */
+  transform: translate(-50%, -50%); /* Centers the circle exactly in the middle */
+}
+
+.App h1 {
+  font-family: 'sevenseg', sans-serif;
+  font-size: 48px; /* Adjust size as needed */
+  /* Any additional styling */
+}
+
+
+/* .Score {
+  font-family: 'sevenseg', sans-serif;
+  font-size: 100px; 
+  left: 500px;
+  top: 10%;
+
+} */
+
+.Lscore {
+  position: absolute;
+  top: 5%;
+  left: 45%;
+  transform: translateX(-100%); /* Shifts the text left by its own width */
+  font-family: 'sevenseg', sans-serif;
+  font-size: 100px;
+  color: rgba(146, 146, 146, 0.315);
+}
+
+.Lteam {
+  position: absolute;
+  top: 10%;
+  left: 33%;
+  transform: translateX(-100%); /* Shifts the text left by its own width */
+  font-family: 'sevenseg', sans-serif;
+  font-size: 50px;
+  color: rgba(146, 146, 146, 0.315);
+}
+
+.Rscore {
+  position: absolute; /* This is necessary for left and top to work correctly */
+  top: 5%; /* Keeps your original positioning from the top */
+  left: 55%; /* Centers horizontally relative to the parent container */
+  
+  font-family: 'sevenseg', sans-serif;
+  font-size: 100px; /* Adjust size as needed */
+  color: rgba(146, 146, 146, 0.315); /* Ensures text is visible */
+}
+
+.Rteam {
+  position: absolute;
+  top: 10%;
+  left: 66%;
+  font-family: 'sevenseg', sans-serif;
+  font-size: 50px;
+  color: rgba(146, 146, 146, 0.315);
+}
+
+
+.Time {
+  position: absolute;
+  top: 102%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'sevenseg', sans-serif;
+  font-size: 50px;
+  color: rgba(254, 103, 103, 0.315);
+}
+
+
+
+
+
+/* transform: translateX(-30px);   */
+
+
+.last-wall-hit {
+  color: white;
+  text-align: center;
+  margin: 10px 0;
+  font-family: 'sevenseg', sans-serif; /* Keeps the seven-segment font */
+  font-size: 140px; /* Makes the text much bigger */
+  position: absolute; /* Positions the element absolutely within its relative parent */
+  left: 50%; /* Starts at the center */
+  transform: translateX(-50%) translateX(-20px); /* Offsets a little to the left of center */
+}
+
+.central-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px; /* This can be as thick or as thin as you like */
+  background-color: white; /* Ensures the line is clearly visible */
+}
+
+
+
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.goal-message {
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  text-align: center;
+  width: 100%;
+}
+
+.goal-overlay {
+  position: fixed; /* Use fixed positioning to cover the entire view */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Cover the full viewport width */
+  height: 100vh; /* Cover the full viewport height */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  z-index: 10; 
+}

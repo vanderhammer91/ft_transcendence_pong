@@ -1,0 +1,20 @@
+/* .ball {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  top: 50%; 
+  left: 50%;
+} 
+*/
+
+
+.ball {
+  position: absolute;
+  width: 20px; /* Adjust if your ball's dimensions are different */
+  height: 20px;
+  background-color: white; /* Choose a color that stands out from the background */
+  border-radius: 50%; /* This makes the element a circle */
+  /* Add any additional styling here */
+}
