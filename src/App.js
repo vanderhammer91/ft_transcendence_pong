@@ -9,7 +9,7 @@ function App() {
   const [leftPaddleY, setLeftPaddleY] = useState(200); // Initial left paddle position
   const [rightPaddleY, setRightPaddleY] = useState(200); // Initial right paddle position
   const [ballPosition, setBallPosition] = useState({ x: 500, y: 250 }); // Initialize ball position
-
+  const [showGoalOverlay, setShowGoalOverlay] = useState(false);
 
   useEffect(() => {
     // Listen for paddle position updates from the server
@@ -38,19 +38,28 @@ function App() {
       socket.emit('movePaddle', { deltaY });
     };
 
-    // Attach the event listener
-    window.addEventListener('keydown', handleKeyPress);
+    socket.on('goalScored', () => {
+      setShowGoalOverlay(true);
+      setTimeout(() => setShowGoalOverlay(false), 2000);
+    });
 
-    // Return a cleanup function to remove the event listener
+    window.addEventListener('keydown', handleKeyPress);
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
       socket.off('paddlesUpdate');
+      socket.off('ballUpdate');
+      socket.off('goalScored');
     };
   }, []);
 
   return (
     <div className="App">
       <div className="game-area">
+        {showGoalOverlay && (
+          <div className="goal-overlay">
+            <p className="goal-text">GOAL!</p>
+          </div>
+        )}
         <div style={{ position: 'absolute', left: '20px', top: `${leftPaddleY}px`, width: '20px', height: '100px', backgroundColor: 'blue' }}></div>
         <div style={{ position: 'absolute', right: '20px', top: `${rightPaddleY}px`, width: '20px', height: '100px', backgroundColor: 'red' }}></div>
         <Ball top={ballPosition.y} left={ballPosition.x} />

@@ -54,6 +54,7 @@ const goalScored = (isBlueTeam) => {
   } else {
     console.log(red, "Red team scored a goal!");
   }
+  io.emit('goalScored', isBlueTeam ? 'blue' : 'red');
 };
 
 
