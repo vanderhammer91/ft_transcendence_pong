@@ -50,7 +50,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="game-area" style={{ position: 'relative', width: '1000px', height: '500px', border: '1px solid black' }}>
+      <div className="game-area">
         <div style={{ position: 'absolute', left: '20px', top: `${leftPaddleY}px`, width: '20px', height: '100px', backgroundColor: 'blue' }}></div>
         <div style={{ position: 'absolute', right: '20px', top: `${rightPaddleY}px`, width: '20px', height: '100px', backgroundColor: 'red' }}></div>
         <Ball top={ballPosition.y} left={ballPosition.x} />

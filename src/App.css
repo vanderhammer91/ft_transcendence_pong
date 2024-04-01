@@ -1,11 +1,4 @@
 
-.main-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #000; /* Optional: background color for the area outside the game */
-}
 
 /* Updated App styles */
 .App {
@@ -14,6 +7,15 @@
   position: relative;
   background-color: #333;
   color: white;
+}
+
+.game-area { 
+  width: '1000px'; 
+  height: '500px'; 
+  position: 'relative'; 
+  border: '1px solid white'; 
+  margin-top: '20px';
+  margin-left: '20px';
 }
 
 

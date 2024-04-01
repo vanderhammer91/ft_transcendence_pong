@@ -2,6 +2,8 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 
+const blue = '\x1b[34m%s\x1b[0m';
+const red = '\x1b[31m%s\x1b[0m';
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -16,7 +18,6 @@ let paddles = {
   left: { y: 200 },
   right: { y: 200 },
 };
-
 
 
 // Function to generate a random velocity within a range, and randomly invert it
@@ -34,6 +35,30 @@ let ball = {
   radius: 10
 };
 
+// // Function to reset ball's position and velocity
+// const goalScored = () => {
+//   ball.x = 500; // Reset to middle of the game width
+//   ball.y = 250; // Reset to middle of the game height
+//   ball.dx = randomVelocity(3, 5); // Random horizontal velocity between 3 and 5
+//   ball.dy = randomVelocity(3, 5); // Random vertical velocity between 3 and 5
+// };
+
+const goalScored = (isBlueTeam) => {
+  ball.x = 500; // Reset to middle of the game width
+  ball.y = 250; // Reset to middle of the game height
+  ball.dx = randomVelocity(3, 5); // Random horizontal velocity between 3 and 5
+  ball.dy = randomVelocity(3, 5); // Random vertical velocity between 3 and 5
+
+  if (isBlueTeam) {
+    console.log(blue, "Blue team scored a goal!");
+  } else {
+    console.log(red, "Red team scored a goal!");
+  }
+};
+
+
+
+
 const updateBallPosition = () => {
   ball.x += ball.dx;
   ball.y += ball.dy;
@@ -49,11 +74,13 @@ const updateBallPosition = () => {
 
   //Collision with left/right walls.
   if (ball.x - ball.radius <= 0){
-    ball.dx = Math.abs(ball.dx);
+    goalScored(false); 
+    //ball.dx = Math.abs(ball.dx);
   }
 
   if (ball.x + ball.radius >= 1000) {
-    ball.dx = -Math.abs(ball.dx);
+    goalScored(true);
+    //ball.dx = -Math.abs(ball.dx);
   }
 
   // Collision detection with left paddle
