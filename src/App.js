@@ -40,7 +40,7 @@ function App() {
 
     socket.on('goalScored', () => {
       setShowGoalOverlay(true);
-      setTimeout(() => setShowGoalOverlay(false), 2000);
+      setTimeout(() => setShowGoalOverlay(false), 1500);
     });
 
     window.addEventListener('keydown', handleKeyPress);
