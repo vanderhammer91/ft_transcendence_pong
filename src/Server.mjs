@@ -17,20 +17,27 @@ let paddles = {
   right: { y: 200 },
 };
 
+let clientID = 0; // Starting point for client IDs
+const clientIDsMap = new Map(); // Map to store client IDs
+
 io.on('connection', (socket) => {
-  console.log(`Client connected: ${socket.id}`);
+  clientID++; // Increment clientID for each new connection
+  clientIDsMap.set(socket.id, clientID); // Map socket ID to clientID
+  console.log(`Client connected: ${socket.id}, assigned ID: ${clientID}`);
 
   // Send initial states of both paddles to the newly connected client
   socket.emit('paddlesUpdate', paddles);
 
   // Handle paddle movement commands from clients
   socket.on('movePaddle', ({ side, deltaY }) => {
-    // Update the specified paddle's position based on received deltaY
     paddles[side].y += deltaY;
     paddles[side].y = Math.max(0, Math.min(paddles[side].y, 400)); // Keep within bounds
+    io.emit('paddlesUpdate', paddles); // Broadcast updated paddle positions
+  });
 
-    // Broadcast updated paddle positions to all clients
-    io.emit('paddlesUpdate', paddles);
+  socket.on('disconnect', () => {
+    console.log(`Client disconnected: ${socket.id}, ID was: ${clientIDsMap.get(socket.id)}`);
+    clientIDsMap.delete(socket.id); // Remove the client ID from the map upon disconnection
   });
 });
 
