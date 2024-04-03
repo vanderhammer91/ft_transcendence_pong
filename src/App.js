@@ -3,7 +3,13 @@ import './App.css';
 import Ball from './Ball';
 import io from 'socket.io-client';
 
-const socket = io('http://192.168.43.6:4000'); // Use your server's actual IP address here
+//get the entered URI and replace the port with 4000 (our server port.)
+const protocol = window.location.protocol;
+const socketURI = `${protocol}//${window.location.hostname}:4000`;
+const socket = io(socketURI);
+
+//Alt: Hard coding the servers address 
+//const socket = io('http://192.168.43.6:4000'); 
 
 function App() {
   const [leftPaddleY, setLeftPaddleY] = useState(200); // Initial left paddle position
