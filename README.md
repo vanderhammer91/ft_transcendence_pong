@@ -1,7 +1,7 @@
 Playing around with hosting a multi client PONG game using react, node, js, css.
 
 
-## COMPLETED FEATURES:
+# COMPLETED FEATURES:
 
 Feat: Gamestate is maintained on the server, and viewable on all successfully connected clients.
 
