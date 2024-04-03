@@ -11,16 +11,16 @@ Feat: Odd numbered clients control left/blue paddle, even numbered clients contr
 
 WIP: Aesthetics/additional features.
 
-#//Running the React application.
+##To run (inside project folder):
 
-To run (inside project folder):
+#Running the React application:
 
 1.npm install
 
 2.npm start
 
 
-#//Running the Server to host gamestate:
+#Running the Server to host gamestate:
 
 In another terminal (also inside project folder): 
 
