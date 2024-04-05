@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Ball from './Ball';
-import io from 'socket.io-client';
-
-//get the entered URI and replace the port with 4000 (our server port.)
-const protocol = window.location.protocol;
-const socketURI = `${protocol}//${window.location.hostname}:4000`;
-const socket = io(socketURI);
-
-//Alt: Hard coding the servers address 
-//const socket = io('http://192.168.43.6:4000'); 
 
 function App() {
   const [leftPaddleY, setLeftPaddleY] = useState(200); // Initial left paddle position
@@ -18,15 +9,34 @@ function App() {
   const [showGoalOverlay, setShowGoalOverlay] = useState(false);
 
   useEffect(() => {
-    // Listen for paddle position updates from the server
-    socket.on('paddlesUpdate', (paddles) => {
-      setLeftPaddleY(paddles.left.y);
-      setRightPaddleY(paddles.right.y);
-    });
+    // Determine the WebSocket URI
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const socketURI = `${protocol}//${window.location.hostname}:8000/ws/game/`; // Adjust the port and path as needed
+    const socket = new WebSocket(socketURI);
 
-    socket.on('ballUpdate', (ball) => {
-      setBallPosition({ x: ball.x, y: ball.y });
-    });
+    socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Data received: ", data);
+
+      // Handling different types of messages
+      if(data.paddles) {
+        setLeftPaddleY(data.paddles.left.y);
+        setRightPaddleY(data.paddles.right.y);
+      }
+      
+      if(data.ball) {
+        setBallPosition({ x: data.ball.x, y: data.ball.y });
+      }
+
+      if(data.type === 'goalScored') {
+        setShowGoalOverlay(true);
+        setTimeout(() => setShowGoalOverlay(false), 1500); // Show goal overlay for 1.5 seconds
+      }
+    };
 
     // Define the key press handler within useEffect
     const handleKeyPress = (event) => {
@@ -40,21 +50,16 @@ function App() {
         return; // Do nothing for other keys
       }
   
-      // Emit paddle movement to the server without specifying the side
-      socket.emit('movePaddle', { deltaY });
+      // Send paddle movement to the server
+      socket.send(JSON.stringify({ deltaY }));
     };
 
-    socket.on('goalScored', () => {
-      setShowGoalOverlay(true);
-      setTimeout(() => setShowGoalOverlay(false), 1500);
-    });
-
     window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup function
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
-      socket.off('paddlesUpdate');
-      socket.off('ballUpdate');
-      socket.off('goalScored');
+      socket.close();
     };
   }, []);
 
