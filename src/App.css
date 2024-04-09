@@ -9,14 +9,14 @@
   color: white;
 }
 
-.game-area { 
-  width: '1000px'; 
-  height: '500px'; 
+/* .game-area { 
+  width: '600px'; 
+  height: '400px'; 
   position: 'relative'; 
   border: '1px solid white'; 
   margin-top: '20px';
   margin-left: '20px';
-}
+} */
 
 
 /* .App {
@@ -198,4 +198,40 @@
   color: white;
   font-size: 2rem;
   z-index: 10; 
+}
+
+
+
+/* App.css */
+
+.game-area {
+  position: relative;
+  width: 600px; /* Adjust based on your game's design */
+  height: 400px; /* Adjust based on your game's design */
+  margin: 20px auto;
+  background-color: #f0f0f0; /* Light grey background for visibility */
+  border: 2px solid #000; /* Add border to visualize the game area */
+}
+
+.paddle {
+  position: absolute;
+  width: 20px;
+  height: 100px; /* Adjust height as needed */
+  background-color: green; /* Left paddle color */
+}
+
+.right-paddle {
+  background-color: red; /* Right paddle color */
+}
+
+.left-paddle {
+  background-color: blue; /* Right paddle color */
+}
+
+.ball {
+  position: absolute;
+  width: 20px; /* Ball size */
+  height: 20px; /* Ball size */
+  border-radius: 50%; /* Make it circular */
+  background-color: black; /* Ball color */
 }

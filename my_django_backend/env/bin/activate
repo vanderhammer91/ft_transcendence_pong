@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/ivanderw/transcendence/env"
+VIRTUAL_ENV="/home/ivanderw/ft_transcendence_pong/my_django_backend/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
