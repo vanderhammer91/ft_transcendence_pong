@@ -4,17 +4,52 @@ import asyncio
 import random
 
 class GameConsumer(AsyncWebsocketConsumer):
+    client_counter = 0  # Class variable to keep track of client count
+    client_ids = {}  # Dictionary to store client IDs
+    ball = {
+        "x": 300,
+        "y": 200,
+        "dx": 0,
+        "dy": 0,
+        "radius": 10,
+        "color": "white"
+    }  # Shared ball state across instances
+    paddles = {"left": {"y": 150}, "right": {"y": 150}}  # Shared paddle state
+
+    @classmethod
+    def random_velocity(cls, min_val, max_val):
+        """Generate a random velocity."""
+        return random.uniform(min_val, max_val) * (1 if random.random() < 0.5 else -1)
+
+    @classmethod
+    def reset_ball(cls):
+        """Reset the ball to the center of the game area with random velocity."""
+        cls.ball['x'] = 300
+        cls.ball['y'] = 200
+        cls.ball['dx'] = cls.random_velocity(3, 5)
+        cls.ball['dy'] = cls.random_velocity(3, 5)
+        cls.ball['color'] = "white"
+
     async def connect(self):
         await self.accept()
         self.group_name = "game_group"
+        
+        # Assign an ID and increment the counter
+        self.client_id = GameConsumer.client_counter
+        GameConsumer.client_counter += 1
+        self.client_ids[self.channel_name] = self.client_id
+
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         
-        self.paddles = {"left": {"y": 150}, "right": {"y": 150}}
-        self.ball = self.reset_ball()  # Initialize ball with a reset function
-        
+        if len(self.client_ids) == 1:  # Reset the ball when the first client connects
+            self.reset_ball()
+
         asyncio.create_task(self.game_loop())
 
     async def disconnect(self, close_code):
+        # Remove the client ID on disconnect
+        if self.channel_name in self.client_ids:
+            del self.client_ids[self.channel_name]
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def receive(self, text_data):
@@ -27,20 +62,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             'type': 'send_paddle_update',
             'paddles': self.paddles
         })
-
-    def random_velocity(self, min_val, max_val):
-        return random.uniform(min_val, max_val) * (1 if random.random() < 0.5 else -1)
-
-    def reset_ball(self):
-        """Reset ball to the center of the game area with random velocity."""
-        return {
-            "x": 300,
-            "y": 200,
-            "dx": self.random_velocity(3, 5),
-            "dy": self.random_velocity(3, 5),
-            "radius": 10,
-            "color": "white"
-        }
 
     async def game_loop(self):
         while True:
@@ -63,25 +84,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         if (self.ball['x'] - self.ball['radius'] <= 20 and 
             self.paddles['left']['y'] <= self.ball['y'] <= self.paddles['left']['y'] + 100):
             self.ball['dx'] = abs(self.ball['dx']) * 1.1  # Ensure dx is positive and increase speed slightly
-            self.ball['color'] = "blue"
-        elif (self.ball['x'] + self.ball['radius'] >= 580 and 
+        elif (self.ball['x'] + self.ball['radius'] >= 550 and 
             self.paddles['right']['y'] <= self.ball['y'] <= self.paddles['right']['y'] + 100):
             self.ball['dx'] = -abs(self.ball['dx']) * 1.1  # Ensure dx is negative and increase speed slightly
-            self.ball['color'] = "red"
 
         # Reset ball if it passes beyond the paddles into the goal areas
-        if self.ball['x'] - self.ball['radius'] < 0 or self.ball['x'] + self.ball['radius'] > 600:
-            self.reset_ball_position()
-
-
-    def reset_ball_position(self):
-        """Resets the ball to the center of the game area with a new random velocity."""
-        self.ball['x'] = 300
-        self.ball['y'] = 200
-        self.ball['dx'] = self.random_velocity(3, 5)
-        self.ball['dy'] = self.random_velocity(3, 5)
-        self.ball['color'] = "white"
-
+        if self.ball['x'] < 0 or self.ball['x'] > 600:
+            self.reset_ball()
 
     async def send_paddle_update(self, event):
         await self.send(json.dumps({'paddles': event['paddles']}))

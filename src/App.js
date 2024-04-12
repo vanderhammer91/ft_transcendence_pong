@@ -29,7 +29,7 @@ function App() {
       }
       
       if (data.ball) {
-        setBallPosition({ x: data.ball.x, y: data.ball.y, color: data.ball.color });
+        setBallPosition({ x: data.ball.x, y: data.ball.y });
       }
 
       if (data.type === 'goalScored') {
@@ -57,17 +57,33 @@ function App() {
         console.log("WebSocket is not open");
         return;
       }
-      
+
       let deltaY = 0;
-      if (event.key === 'w' || event.key === 'ArrowUp') {
-        deltaY = -40;
-      } else if (event.key === 's' || event.key === 'ArrowDown') {
-        deltaY = 40;
-      } else {
-        return;
+      let side;
+
+      switch (event.key) {
+        case 'w':
+          deltaY = -40;
+          side = 'left';
+          break;
+        case 's':
+          deltaY = 40;
+          side = 'left';
+          break;
+        case 'ArrowUp':
+          deltaY = -40;
+          side = 'right';
+          break;
+        case 'ArrowDown':
+          deltaY = 40;
+          side = 'right';
+          break;
+        default:
+          return; // Ignore other keys
       }
-      
-      socket.send(JSON.stringify({ deltaY }));
+
+      // Send the deltaY and side information to the server
+      socket.send(JSON.stringify({ deltaY, side }));
     };
 
     window.addEventListener('keydown', handleKeyPress);
@@ -82,7 +98,7 @@ function App() {
       <div className="game-area">
         <div className="paddle left-paddle" style={{ top: `${leftPaddleY}px`, left: '20px' }}></div>
         <div className="paddle right-paddle" style={{ top: `${rightPaddleY}px`, right: '20px' }}></div>
-        <Ball top={ballPosition.y} left={ballPosition.x} color={ballPosition.color} />
+        <Ball top={ballPosition.y} left={ballPosition.x} />
         {showGoalOverlay && (
           <div className="goal-overlay">
             <p className="goal-text">GOAL!</p>
