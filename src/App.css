@@ -5,7 +5,7 @@
   width: 1000px;
   height: 500px;
   position: relative;
-  background-color: #333;
+  background-color: #000000;
   color: white;
 }
 
@@ -209,7 +209,7 @@
   width: 600px; /* Adjust based on your game's design */
   height: 400px; /* Adjust based on your game's design */
   margin: 20px auto;
-  background-color: #f0f0f0; /* Light grey background for visibility */
+  background-color: #3a3a3a; /* Light grey background for visibility */
   border: 2px solid #000; /* Add border to visualize the game area */
 }
 
